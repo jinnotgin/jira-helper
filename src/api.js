@@ -14,7 +14,6 @@ export const get_rapidBoard = async () => {
   const headers_backup_notNeeded = {
     accept: "application/json, text/javascript, */*; q=0.01",
     "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
-    authorization: "Basic dWZpbml0eTpEZXNrRXllMjAxMSM=",
     "content-type": "application/json",
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
@@ -71,7 +70,6 @@ export const set_IssueEstimate = async (issuedId, estimateValue) => {
   const backup_headers = {
     accept: "*/*",
     "accept-language": "en-US,en;q=0.9",
-    authorization: "Basic dWZpbml0eTpEZXNrRXllMjAxMSM=",
     "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
     "sec-fetch-dest": "empty",
     "sec-fetch-mode": "cors",
