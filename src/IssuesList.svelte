@@ -1,0 +1,131 @@
+<script>
+  import _ from "lodash";
+  import {
+    issues,
+    sprints,
+    activeSearchTerm,
+    activeSprintFilter,
+	activeIssueId,
+	selectedIssuesIds,
+  } from "./stores.js";
+  import SprintList from "./SprintList.svelte";
+
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
+
+  import { set_IssueEstimate, set_newIssue, set_issuesRank } from "./api.js";
+
+  const onItemClick = (event, itemId) => {
+	console.log(event);
+	activeIssueId.set(itemId);
+	
+	if (event.ctrlKey || event.metaKey)	{
+		selectedIssuesIds.update(arr => [...arr, itemId]);
+	} else {
+		selectedIssuesIds.set([itemId]);
+	}
+  };
+
+  const onNumberSubmit = async (itemId, estimateValue) => {
+    console.log({ itemId, estimateValue });
+    const result = await set_IssueEstimate(itemId, estimateValue);
+    console.log(result);
+  };
+
+  const onCreateNewIssue = async event => {
+	  console.log(event)
+    const { sprintId, title, insertAt } = event.detail;
+
+    console.log({ sprintId, title });
+    const result = await set_newIssue(sprintId, title);
+	const newIssueKey = _.get(result, 'issue.issueKey', false);
+
+	if (!!newIssueKey && insertAt === 'start') {
+		const { issuesIds = [] } = $sprints[sprintId];
+		if (issuesIds.length === 0) return false;
+
+		const firstIssueKey = $issues[issuesIds[0]].key;
+		const reorder_result = await set_issuesRank(sprintId, [newIssueKey], firstIssueKey, "before" );
+		console.log(reorder_result);
+	}
+	
+	// apparently Jira needs a bit of time before their API shows the new data. let's wait for 0.5 second.
+	setTimeout( () => dispatch('refreshDataSource', {}), 250);
+  };
+
+  const onMoveIssues = async event => {
+    const { sprintId, moveMode, referenceIssueId } = event.detail;
+	console.log({ sprintId, moveMode, referenceIssueId });
+	
+	const reorder_result = await set_issuesRank(sprintId, $selectedIssuesIds, referenceIssueId, moveMode );
+	console.log(reorder_result);
+
+	// apparently Jira needs a bit of time before their API shows the new data. let's wait for 0.5 second.
+	setTimeout( () => dispatch('refreshDataSource', {}), 250);
+  };
+
+  $: _$issues = $issues;
+  $: sprintIssues = $sprints._sequence
+    .filter(sprintId => {
+      const hasSprintFilter = $activeSprintFilter !== "";
+
+      return (
+        !hasSprintFilter ||
+        (hasSprintFilter && sprintId === $activeSprintFilter)
+      );
+    })
+    .map(sprintId => {
+      const sprintData = $sprints[sprintId];
+      const { issuesIds } = sprintData;
+
+      const issues = issuesIds.map(issueId => {
+        const issue = _$issues[issueId];
+        const { summary, statusUrl, key } = issue;
+        const estimate = _.get(
+          issue,
+          "estimateStatistic.statFieldValue.text",
+          ""
+        );
+
+        const searchString = `${key} ${summary} ${estimate}`
+          .toLocaleLowerCase()
+          .trim();
+        const _hidden =
+          $activeSearchTerm === ""
+            ? false
+            : !searchString.includes($activeSearchTerm);
+
+        let _name = summary;
+        // if (estimate !== "") _name += ` [${estimate}]`;
+
+        return {
+          ...issue,
+          _name,
+          _prefix: key,
+          _url: `${statusUrl}browse/${key}`,
+          _tooltip: `${key}: ${summary}`,
+          _hidden,
+		  _active: $activeIssueId === issueId,
+		  _selected: $selectedIssuesIds.includes(issueId),
+          _numberValue: estimate
+        };
+      });
+
+      return { ...sprintData, issues };
+    });
+</script>
+
+<div>
+  {#each sprintIssues as sprint, i (sprint.id)}
+    <SprintList
+      sprintId={sprint.id}
+      header={sprint.name}
+      items={sprint.issues}
+      {onItemClick}
+      {onNumberSubmit}
+      on:createNewIssue={onCreateNewIssue}
+      on:moveIssues={onMoveIssues}
+	  isSearching={$activeSearchTerm !== ''}
+      userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''} />
+  {/each}
+</div>

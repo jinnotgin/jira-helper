@@ -1,0 +1,243 @@
+{
+  "issues": [
+    {
+      "id": 29571,
+      "key": "JIN-5687",
+      "hidden": false,
+      "typeName": "Story",
+      "typeId": "10001",
+      "summary": "[Tech] Lorem ipsum",
+      "typeUrl": "https://jira.website.com/images/icons/issuetypes/story.svg",
+      "priorityUrl": "https://jira.website.com/images/icons/priorities/lowest.svg",
+      "priorityName": "Lowest",
+      "done": false,
+      "hasCustomUserAvatar": false,
+      "estimateStatisticRequired": false,
+      "estimateStatistic": {
+        "statFieldId": "customfield_10006",
+        "statFieldValue": {}
+      },
+      "statusId": "10000",
+      "statusName": "To Do",
+      "statusUrl": "https://jira.website.com/",
+      "status": {
+        "id": "10000",
+        "name": "To Do",
+        "description": "",
+        "iconUrl": "https://jira.website.com/",
+        "statusCategory": {
+          "id": "2",
+          "key": "new",
+          "colorName": "blue-gray"
+        }
+      },
+      "fixVersions": [],
+      "projectId": 10000,
+      "linkedPagesCount": 0,
+      "extraFields": [
+        {
+          "id": "labels",
+          "label": "Labels",
+          "editable": false,
+          "renderer": "text"
+        }
+      ]
+    }
+  ],
+  "rankCustomFieldId": 10000,
+  "sprints": [
+    {
+      "id": 116,
+      "sequence": 128,
+      "name": "Phase 3C Sprint 5",
+      "state": "ACTIVE",
+      "goal": "",
+      "linkedPagesCount": 0,
+      "startDate": "07/Sep/20 10:45 PM",
+      "endDate": "02/Oct/20 10:45 PM",
+      "completeDate": "None",
+      "canUpdateSprint": true,
+      "remoteLinks": [],
+      "daysRemaining": 0,
+      "timeRemaining": {
+        "text": "3 days left",
+        "isFuture": true
+      },
+      "issuesIds": [
+        35113,
+        35114,
+        35115,
+        35109,
+        35110,
+        35111,
+        35112,
+        35152,
+        35153,
+        35154,
+        35155,
+        35156,
+        35157,
+        35158,
+        35159,
+        33562,
+        33568,
+        33563,
+        33564,
+        33565,
+        33566,
+        33567,
+        34702,
+        33580,
+        33581,
+        33583,
+        33584,
+        33579,
+        33582,
+        33050,
+        33574,
+        33575,
+        31246,
+        34543,
+        31247,
+        33585,
+        33560,
+        33561,
+        31249,
+        31250,
+        31251,
+        31263,
+        33621,
+        33619,
+        33620,
+        35144,
+        35145,
+        35168,
+        35128,
+        35129,
+        35176,
+        35130,
+        35178,
+        35177,
+        36055,
+        35127,
+        35149,
+        35125,
+        35126,
+        35122,
+        35123,
+        36265,
+        31254,
+        31255,
+        31256,
+        33570,
+        31297,
+        31265,
+        31266,
+        31284,
+        31285,
+        31286,
+        31287,
+        31288,
+        31289,
+        31290,
+        31293,
+        31294,
+        31295,
+        36501,
+        31298,
+        31296
+      ]
+    }],
+  "supportsPages": true,
+  "projects": [
+    {
+      "id": 10000,
+      "key": "JIN",
+      "name": "JIN"
+    }
+  ],
+  "epicData": {
+    "epics": [
+      {
+        "id": 10011,
+        "key": "JIN-12",
+        "hidden": false,
+        "typeName": "Epic",
+        "typeId": "10000",
+        "summary": "Account Verification",
+        "typeUrl": "https://jira.website.com/images/icons/issuetypes/epic.svg",
+        "done": false,
+        "hasCustomUserAvatar": false,
+        "epicLabel": "Account Verification",
+        "epicColor": "ghx-label-4",
+        "epicStats": {
+          "notDoneEstimate": 30.6,
+          "doneEstimate": 110.99999999999999,
+          "totalEstimate": 141.6,
+          "percentageCompleted": 78,
+          "estimated": 28,
+          "percentageEstimated": 75,
+          "notEstimated": 9,
+          "percentageUnestimated": 25,
+          "notDone": 15,
+          "done": 22,
+          "totalIssueCount": 37
+        },
+        "estimateStatisticRequired": false,
+        "estimateStatistic": {
+          "statFieldId": "customfield_10006",
+          "statFieldValue": {}
+        },
+        "statusId": "10000",
+        "statusName": "To Do",
+        "statusUrl": "https://jira.website.com/",
+        "status": {
+          "id": "10000",
+          "name": "To Do",
+          "description": "",
+          "iconUrl": "https://jira.website.com/",
+          "statusCategory": {
+            "id": "2",
+            "key": "new",
+            "colorName": "blue-gray"
+          }
+        },
+        "fixVersions": [],
+        "projectId": 10000,
+        "linkedPagesCount": 0
+      }
+    ],
+    "canEditEpics": true,
+    "supportsPages": true
+  },
+  "canManageSprints": true,
+  "canCreateIssue": true,
+  "versionData": {
+    "versionsPerProject": {
+      "10000": [
+        {
+          "id": 10000,
+          "name": "Release 1",
+          "description": "Release 1",
+          "sequence": 1,
+          "released": false,
+          "versionStats": {
+            "notDoneEstimate": 0,
+            "doneEstimate": 50,
+            "totalEstimate": 50,
+            "percentageCompleted": 100,
+            "estimated": 15,
+            "percentageEstimated": 100,
+            "notEstimated": 0,
+            "percentageUnestimated": 0,
+            "notDone": 0,
+            "done": 15,
+            "totalIssueCount": 15
+          }
+        }]
+    },
+    "canCreateVersion": true,
+    "isLinkToDevStatusVersionAvailable": true
+  },
+  "hasBulkChangePermission": true
+}
