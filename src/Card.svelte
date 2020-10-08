@@ -59,4 +59,9 @@
     text-align: center;
   }
 
+  div.content {
+    user-select: text;
+    cursor: text;
+  }
+
 </style>
