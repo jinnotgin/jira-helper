@@ -59,7 +59,7 @@
     text-align: center;
   }
 
-  div.content {
+  div.content span {
     user-select: text;
     cursor: text;
   }
