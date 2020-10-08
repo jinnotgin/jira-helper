@@ -54,7 +54,6 @@
 
   div.shadow {
     position: absolute;
-    transition: left 0.03s linear, top 0.03s linear;
     display: none;
     user-select: none;
   }
