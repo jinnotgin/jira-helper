@@ -9,10 +9,10 @@
 </script>
 
 <style>
-  div.container {
+  div.divider {
     padding: 6px;
   }
-  hr.divider {
+  div.divider  hr {
     margin: 0;
     border: 0;
     height: 2px;
@@ -20,25 +20,25 @@
     opacity: 0;
   }
 
-  div.container.active {
+  div.divider.active {
     cursor: pointer;
   }
-  div.container.active hr.divider {
+  div.divider.active hr {
     opacity: 1;
   }
 </style>
 
 {#if disabled}
-  <div class="container">
-    <hr class="divider" />
+  <div class="divider">
+    <hr/>
   </div>
 {:else}
-  <Hoverable requireCtrlKey={true} let:hovering={active}>
+  <Hoverable let:hovering={active}>
     <div
-      class="container"
+      class="divider"
       class:active
       on:click={event => checkValidClick(event, active)}>
-      <hr class="divider" />
+      <hr />
     </div>
   </Hoverable>
 {/if}

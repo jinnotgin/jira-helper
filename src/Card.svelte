@@ -3,10 +3,10 @@
   export let id, name, url, urlName, tooltipText, active, selected, onClick;
 </script>
 
-<div class="card" class:active class:selected class:addNew={type === "addNew"} on:click={onClick}>
-  {#if type === "addNew"}
+<div class={`card ${type}`} class:active class:selected on:click={onClick}>
+  {#if type === "blank"}
     <div class="content">
-      <span>Add new item...</span>
+      <span>{name}</span>
     </div>
   {:else}
     <div class="header">
@@ -50,12 +50,12 @@
     flex: 1;
   }
 
-  div.card.addNew {
+  div.card.blank {
     opacity: 0.8;
     border: none;
   }
 
-  div.card.addNew div.content {
+  div.card.blank div.content {
     text-align: center;
   }
 

@@ -14,7 +14,7 @@
     onItemClick,
     onNumberSubmit,
     userCanToggleVisibility,
-    isSearching;
+    isSearching, isDragging;
   let userToggleVisible = false;
 
   const onToggleClick = () => {
@@ -116,9 +116,9 @@
       <ol out:slide|local>
         {#if items.length > 0 && !isSearching}
           <li>
-            <Card type="addNew" onClick={() => addItem('start')} />
+            <Card type="blank" name="Add new item..." onClick={() => addItem('start')} />
           </li>
-          <Divider onClick={() => triggerMoveIssues('before', items[0].id)} />
+          <Divider disabled={!isDragging} onClick={() => triggerMoveIssues('before', items[0].id)} />
         {/if}
         {#each items as item (item.id)}
           {#if !item._hidden}
@@ -140,13 +140,13 @@
               </Card>
               <Divider
                 onClick={() => triggerMoveIssues('after', item.id)}
-                disabled={isSearching} />
+                disabled={isSearching || !isDragging} />
             </li>
           {/if}
         {/each}
         {#if !isSearching}
           <li>
-            <Card type="addNew" onClick={addItem} />
+            <Card type="blank" name="Add new item..." onClick={addItem} />
           </li>
         {/if}
       </ol>
