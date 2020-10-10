@@ -17,7 +17,15 @@
     dragCounter--;
     if (dragCounter === 0) dragEntered = false;
   };
-  $: console.log(dragEntered);
+
+  let dropped = false;
+  const handleDragDrop = event => {
+    event.preventDefault();
+    console.log(event);
+    dropped = true;
+    console.log("item was dropped");
+    onClick(event);
+  };
 </script>
 
 <style>
@@ -50,15 +58,12 @@
     class:dragEntered
     on:dragenter={handleDragEnter}
     on:dragleave={handleDragLeave}
-    on:drop={onClick}>
+    on:drop={handleDragDrop}
+    ondragover="return false">
     <hr />
-    {#if dragEntered}
-      <div
-        class="dragEntered-slot"
-        on:dragenter={handleDragEnter}
-        on:dragleave={handleDragLeave}
-        on:drop={onClick}>
-        <slot />
+    {#if dragEntered || dropped}
+      <div class="dragEntered-slot">
+        <slot name="dragging" {dropped} />
       </div>
     {/if}
   </div>

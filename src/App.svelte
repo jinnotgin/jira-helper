@@ -5,6 +5,8 @@
     issues,
     sprints,
     epics,
+    isMovingIssues,
+    dataLastUpdateTime,
     activeSearchTerm,
     activeSprintFilter,
     activeIssueId,
@@ -19,6 +21,7 @@
   import { get_rapidBoard } from "./api.js";
 
   const _refreshDataSource = () => {
+    console.log("Refreshing data source...");
     get_rapidBoard().then(data => {
       //   console.log(data);
 
@@ -42,23 +45,24 @@
         return keyedArray(array);
       };
 
-      const issuesData = process("issues");
-
-      issues.set(issuesData);
+      console.log("Processing data source...");
+      issues.set(process("issues"));
       sprints.set(process("sprints"));
       epics.set(process("epicData.epics"));
+      console.log("Done!");
+      isMovingIssues.set(false);
+      dataLastUpdateTime.set(new Date().getTime());
 
       ready.set(true);
-      console.log("Refreshing data source...");
       console.log({ $issues, $sprints, $epics });
     });
   };
   let timeout_refreshDataSource;
   const refreshDataSource = () => {
-	  clearTimeout(timeout_refreshDataSource);
-	  _refreshDataSource();
-	  timeout_refreshDataSource = setTimeout(refreshDataSource, 60 * 1000);
-  }
+    clearTimeout(timeout_refreshDataSource);
+    _refreshDataSource();
+    timeout_refreshDataSource = setTimeout(refreshDataSource, 60 * 1000);
+  };
   refreshDataSource();
 
   $: orderedSprints = $sprints._sequence

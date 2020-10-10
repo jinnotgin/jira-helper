@@ -1,4 +1,10 @@
 <script>
+  import { getContext } from 'svelte';
+  import {
+    isMovingIssues,
+    dataLastUpdateTime,
+    selectedIssuesIds
+  } from "./stores.js";
   import Card from "./Card.svelte";
   import NumberInput from "./NumberInput.svelte";
   import Divider from "./Divider.svelte";
@@ -127,7 +133,7 @@
         {/if}
         {#each items as item (item.id)}
           {#if !item._hidden}
-            <li>
+            <li out:slide>
               <Card
                 id={item.id}
                 name={item._name}
@@ -136,20 +142,25 @@
                 tooltipText={item._tooltip}
                 active={item._active}
                 selected={item._selected}
-                onClick={event => onItemClick(event, item.id)}
-                draggable={true}>
+                onClick={event => !$isMovingIssues && onItemClick(event, item.id)}
+                draggable={!$isMovingIssues}
+                disabled={$isMovingIssues && $selectedIssuesIds.includes(item.id)}>
                 <NumberInput
                   value={item._numberValue}
                   on:valueChanged={e => {
                     onNumberSubmit(item.id, e.detail.value);
                   }} />
               </Card>
+                {#key $dataLastUpdateTime}
               <Divider
                 onClick={() => triggerMoveIssues('after', item.id)}
                 dropTarget={true}
                 disabled={isSearching}>
-                <Card type="basic" name="Dragging in" onClick={addItem} />
+                <div slot="dragging" let:dropped>
+                                <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
+                </div>
               </Divider>
+                {/key}
             </li>
           {/if}
         {/each}

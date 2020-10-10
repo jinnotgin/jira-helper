@@ -1,6 +1,15 @@
 <script>
   export let type = "default";
-  export let id, name, url, urlName, tooltipText, active, selected, onClick, draggable;
+  export let name = "";
+  export let id,
+    url,
+    urlName,
+    tooltipText,
+    active,
+    selected,
+    onClick,
+    draggable,
+    disabled;
 </script>
 
 <style>
@@ -23,6 +32,11 @@
     border: 2px solid #4dbdff;
   }
 
+  div.card.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
   div.header {
     display: flex;
     flex-direction: row;
@@ -37,13 +51,23 @@
     border: none;
   }
 
-  div.card.basic div.content {
-    text-align: center;
+  div.card.basic,
+  div.card.blank {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   div.content span {
     user-select: text;
     cursor: text;
+  }
+
+  div.card.blank {
+    opacity: 0.8;
+    background: transparent;
+    border: 2px dotted #aaa;
+    height: 50px;
   }
 </style>
 
@@ -51,9 +75,14 @@
   class={`card ${type}`}
   class:active
   class:selected
+  class:disabled
   draggable={draggable && selected}
   on:click={onClick}>
   {#if type === 'basic'}
+    <div class="content">
+      <span>{name}</span>
+    </div>
+  {:else if type === 'blank'}
     <div class="content">
       <span>{name}</span>
     </div>
