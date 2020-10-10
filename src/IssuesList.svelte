@@ -6,7 +6,8 @@
     activeSearchTerm,
     activeSprintFilter,
     activeIssueId,
-    selectedIssuesIds
+    selectedIssuesIds,
+    isMovingIssues
   } from "./stores.js";
 
   import DragDropAware from "./DragDropAware.svelte";
@@ -68,11 +69,11 @@
       elementWhenMouseIsReleased !== null &&
       elementWhenMouseIsReleased.closest("div.divider") !== null
     ) {
-	  // hack, but we are simulating a mouse click on the divider
-	  // this is becasue the older implementation uses a mouse click to trigger a move. 
-	  // TODO: clean this up in future.
+      // hack, but we are simulating a mouse click on the divider
+      // this is becasue the older implementation uses a mouse click to trigger a move.
+      // TODO: clean this up in future.
       elementWhenMouseIsReleased.click();
-      console.log("Triggering mouse click on", {elementWhenMouseIsReleased});
+      console.log("Triggering mouse click on", { elementWhenMouseIsReleased });
     }
   };
 
@@ -80,6 +81,7 @@
     const { sprintId, moveMode, referenceIssueId } = event.detail;
     console.log({ sprintId, moveMode, referenceIssueId });
 
+    isMovingIssues.set(true);
     const reorder_result = await set_issuesRank(
       sprintId,
       $selectedIssuesIds,
@@ -143,24 +145,24 @@
     });
 </script>
 
-<DragDropAware let:isDragging on:mouseReleased={onMouseReleased}>
-  <div slot="content">
-    {#each sprintIssues as sprint, i (sprint.id)}
-      <SprintList
-        sprintId={sprint.id}
-        header={sprint.name}
-        items={sprint.issues}
-        {onItemClick}
-        {onNumberSubmit}
-        on:createNewIssue={onCreateNewIssue}
-        on:moveIssues={onMoveIssues}
-        isSearching={$activeSearchTerm !== ''}
-        userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''}
-        {isDragging} />
-    {/each}
-  </div>
-  <div slot="shadow">
+<!-- <DragDropAware let:isDragging on:mouseReleased={onMouseReleased}> -->
+<div>
+  <!-- <div slot="content"> -->
+  {#each sprintIssues as sprint, i (sprint.id)}
+    <SprintList
+      sprintId={sprint.id}
+      header={sprint.name}
+      items={sprint.issues}
+      {onItemClick}
+      {onNumberSubmit}
+      on:createNewIssue={onCreateNewIssue}
+      on:moveIssues={onMoveIssues}
+      isSearching={$activeSearchTerm !== ''}
+      userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''} />
+    <!-- {isDragging} /> -->
+  {/each}
+</div>
+<!-- <div slot="shadow">
     <Card type="blank" name={`${$selectedIssuesIds.length} items selected`} />
-
-  </div>
-</DragDropAware>
+  </div> -->
+<!-- </DragDropAware> -->
