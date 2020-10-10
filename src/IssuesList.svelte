@@ -2,8 +2,8 @@
   import _ from "lodash";
   import {
     issues,
-	sprints,
-	overallIssuesSequence,
+    sprints,
+    overallIssuesSequence,
     activeSearchTerm,
     activeSprintFilter,
     activeIssueId,
@@ -21,13 +21,61 @@
   import { set_IssueEstimate, set_newIssue, set_issuesRank } from "./api.js";
 
   const onItemClick = (event, itemId) => {
-    console.log(event);
-    activeIssueId.set(itemId);
+    const { target } = event;
+    console.log({ event, target });
 
-    if (event.ctrlKey || event.metaKey) {
-      selectedIssuesIds.update(arr => [...arr, itemId]);
-    } else {
-      selectedIssuesIds.set([itemId]);
+    const isHyperlink =
+      target.nodeName === "A" && target.classList.contains("url");
+    const isNumberInput =
+      target.nodeName === "INPUT" && target.classList.contains("numberInput");
+    if (isHyperlink) event.preventDefault();
+
+    if (!isNumberInput) {
+      activeIssueId.set(itemId);
+
+      // the following selection logic is not exactly the same as "file manager" UX
+      // to be accurate, you should track the "last focused item" seperately from "selectedItems"
+      if (event.ctrlKey || event.metaKey) {
+        selectedIssuesIds.update(arr => [...arr, itemId]);
+      } else if (event.shiftKey) {
+        // remove any selected ranges
+        let selection = window.getSelection();
+        selection.removeAllRanges();
+
+        // proceed with selection logic
+        const lastClickedItemId = $selectedIssuesIds.slice(-1)[0];
+
+        let new_selectedIssuesIds = [];
+        if (lastClickedItemId) {
+          const lastClickedItemId_index = $overallIssuesSequence.indexOf(
+            lastClickedItemId
+          );
+          const currentClickItemId_index = $overallIssuesSequence.indexOf(
+            itemId
+          );
+
+          // the following logic is to ensure "lastClickedItem" remains the "lastClickedItem", since "shift-click" does not count as a selection click (ctrl-click)
+          if (currentClickItemId_index < lastClickedItemId_index) {
+            new_selectedIssuesIds = $overallIssuesSequence.slice(
+              currentClickItemId_index,
+              lastClickedItemId_index
+            );
+          } else {
+            new_selectedIssuesIds = $overallIssuesSequence.slice(
+              lastClickedItemId_index + 1,
+              currentClickItemId_index + 1
+            );
+          }
+          new_selectedIssuesIds.push(lastClickedItemId);
+        } else {
+          // in case no items was selected previously, even with shift engaged
+          new_selectedIssuesIds.push(itemId);
+        }
+
+        selectedIssuesIds.set(new_selectedIssuesIds);
+      } else {
+        selectedIssuesIds.set([itemId]);
+      }
     }
   };
 
@@ -83,9 +131,11 @@
     console.log({ sprintId, moveMode, referenceIssueId });
 
     const sequenced_selectIssueIds = [...$selectedIssuesIds].sort((a, b) => {
-      return $overallIssuesSequence.indexOf(a) - $overallIssuesSequence.indexOf(b);
-	});
-	console.log({sequenced_selectIssueIds})
+      return (
+        $overallIssuesSequence.indexOf(a) - $overallIssuesSequence.indexOf(b)
+      );
+    });
+    console.log({ sequenced_selectIssueIds });
 
     isMovingIssues.set(true);
     const reorder_result = await set_issuesRank(
@@ -152,8 +202,11 @@
 </script>
 
 <!-- <DragDropAware let:isDragging on:mouseReleased={onMouseReleased}> -->
+<!--
+<DragDropAware let:isDragging>
+  <div slot="content">
+  -->
 <div>
-  <!-- <div slot="content"> -->
   {#each sprintIssues as sprint, i (sprint.id)}
     <SprintList
       sprintId={sprint.id}
@@ -168,7 +221,9 @@
     <!-- {isDragging} /> -->
   {/each}
 </div>
-<!-- <div slot="shadow">
-    <Card type="blank" name={`${$selectedIssuesIds.length} items selected`} />
-  </div> -->
-<!-- </DragDropAware> -->
+<!--
+<div slot="shadow">
+    <Card type="basic" name={`${$selectedIssuesIds.length} items selected`} />
+  </div>
+</DragDropAware>
+-->
