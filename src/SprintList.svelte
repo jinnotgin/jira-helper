@@ -14,7 +14,7 @@
     onItemClick,
     onNumberSubmit,
     userCanToggleVisibility,
-    isSearching, isDragging;
+    isSearching;
   let userToggleVisible = false;
 
   const onToggleClick = () => {
@@ -116,9 +116,14 @@
       <ol out:slide|local>
         {#if items.length > 0 && !isSearching}
           <li>
-            <Card type="blank" name="Add new item..." onClick={() => addItem('start')} />
+            <Card
+              type="basic"
+              name="Add new item..."
+              onClick={() => addItem('start')} />
           </li>
-          <Divider disabled={!isDragging} onClick={() => triggerMoveIssues('before', items[0].id)} />
+          <Divider
+            dropTarget={true}
+            onClick={() => triggerMoveIssues('before', items[0].id)} />
         {/if}
         {#each items as item (item.id)}
           {#if !item._hidden}
@@ -131,7 +136,8 @@
                 tooltipText={item._tooltip}
                 active={item._active}
                 selected={item._selected}
-                onClick={event => onItemClick(event, item.id)}>
+                onClick={event => onItemClick(event, item.id)}
+                draggable={true}>
                 <NumberInput
                   value={item._numberValue}
                   on:valueChanged={e => {
@@ -140,13 +146,16 @@
               </Card>
               <Divider
                 onClick={() => triggerMoveIssues('after', item.id)}
-                disabled={isSearching || !isDragging} />
+                dropTarget={true}
+                disabled={isSearching}>
+                <Card type="basic" name="Dragging in" onClick={addItem} />
+              </Divider>
             </li>
           {/if}
         {/each}
         {#if !isSearching}
           <li>
-            <Card type="blank" name="Add new item..." onClick={addItem} />
+            <Card type="basic" name="Add new item..." onClick={addItem} />
           </li>
         {/if}
       </ol>

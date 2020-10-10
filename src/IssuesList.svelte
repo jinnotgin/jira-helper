@@ -143,8 +143,9 @@
     });
 </script>
 
-<DragDropAware let:isDragging on:mouseReleased={onMouseReleased}>
-  <div slot="content">
+<!-- <DragDropAware let:isDragging on:mouseReleased={onMouseReleased}> -->
+<div>
+  <!-- <div slot="content"> -->
     {#each sprintIssues as sprint, i (sprint.id)}
       <SprintList
         sprintId={sprint.id}
@@ -155,12 +156,11 @@
         on:createNewIssue={onCreateNewIssue}
         on:moveIssues={onMoveIssues}
         isSearching={$activeSearchTerm !== ''}
-        userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''}
-        {isDragging} />
+        userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''} />
+        <!-- {isDragging} /> -->
     {/each}
   </div>
-  <div slot="shadow">
+  <!-- <div slot="shadow">
     <Card type="blank" name={`${$selectedIssuesIds.length} items selected`} />
-
-  </div>
-</DragDropAware>
+  </div> -->
+<!-- </DragDropAware> -->

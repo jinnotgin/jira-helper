@@ -1,25 +1,7 @@
 <script>
   export let type = "default";
-  export let id, name, url, urlName, tooltipText, active, selected, onClick;
+  export let id, name, url, urlName, tooltipText, active, selected, onClick, draggable;
 </script>
-
-<div class={`card ${type}`} class:active class:selected on:click={onClick}>
-  {#if type === "blank"}
-    <div class="content">
-      <span>{name}</span>
-    </div>
-  {:else}
-    <div class="header">
-      <div class="headerName">
-        <a href={url} title={tooltipText} target="_blank">{urlName}</a>
-      </div>
-      <slot />
-    </div>
-    <div class="content">
-      <span>{name}</span>
-    </div>
-  {/if}
-</div>
 
 <style>
   div.card {
@@ -50,12 +32,12 @@
     flex: 1;
   }
 
-  div.card.blank {
+  div.card.basic {
     opacity: 0.8;
     border: none;
   }
 
-  div.card.blank div.content {
+  div.card.basic div.content {
     text-align: center;
   }
 
@@ -63,5 +45,27 @@
     user-select: text;
     cursor: text;
   }
-
 </style>
+
+<div
+  class={`card ${type}`}
+  class:active
+  class:selected
+  draggable={draggable && selected}
+  on:click={onClick}>
+  {#if type === 'basic'}
+    <div class="content">
+      <span>{name}</span>
+    </div>
+  {:else}
+    <div class="header">
+      <div class="headerName">
+        <a href={url} title={tooltipText} target="_blank">{urlName}</a>
+      </div>
+      <slot />
+    </div>
+    <div class="content">
+      <span>{name}</span>
+    </div>
+  {/if}
+</div>
