@@ -24,7 +24,7 @@
   }
 
   div.card.selected {
-    background: #dbf6ff;
+    background: #e4f4f9;
   }
 
   div.card.active {
@@ -78,23 +78,21 @@
   class:disabled
   draggable={draggable && selected}
   on:click={onClick}>
-  {#if type === 'basic'}
+  {#if type === 'basic' || type === 'blank'}
     <div class="content">
-      <span>{name}</span>
-    </div>
-  {:else if type === 'blank'}
-    <div class="content">
-      <span>{name}</span>
+      <span class="name">{name}</span>
     </div>
   {:else}
     <div class="header">
       <div class="headerName">
-        <a href={url} title={tooltipText} target="_blank">{urlName}</a>
+        <a href={url} class="url" title={tooltipText} target="_blank">
+          {urlName}
+        </a>
       </div>
       <slot />
     </div>
     <div class="content">
-      <span>{name}</span>
+      <span class="name">{name}</span>
     </div>
   {/if}
 </div>
