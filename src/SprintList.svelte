@@ -127,13 +127,18 @@
               name="Add new item..."
               onClick={() => addItem('start')} />
           </li>
+
           <Divider
-            dropTarget={true}
-            onClick={() => triggerMoveIssues('before', items[0].id)} />
+            onClick={() => triggerMoveIssues('before', items[0].id)}
+            dropTarget={true}>
+            <div slot="dragging" let:dropped>
+              <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
+            </div>
+          </Divider>
         {/if}
         {#each items as item (item.id)}
           {#if !item._hidden}
-            <li out:slide>
+            <li>
               <Card
                 id={item.id}
                 name={item._name}
@@ -157,7 +162,7 @@
                 dropTarget={true}
                 disabled={isSearching}>
                 <div slot="dragging" let:dropped>
-                                <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
+                  <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
                 </div>
               </Divider>
                 {/key}
