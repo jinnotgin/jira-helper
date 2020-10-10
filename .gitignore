@@ -1,5 +1,6 @@
 # Sensitive information
 public/fakeData.json
+public/build/*
 
 # Logs
 logs
