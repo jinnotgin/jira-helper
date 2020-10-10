@@ -2,14 +2,12 @@
   import _ from "lodash";
 
   import {
-    issues,
-    sprints,
-    epics,
+	jiraData,
+	issues,
+	sprints,
     isMovingIssues,
     dataLastUpdateTime,
-    activeSearchTerm,
     activeSprintFilter,
-    activeIssueId,
     ready
   } from "./stores.js";
 
@@ -23,38 +21,12 @@
   const _refreshDataSource = () => {
     console.log("Refreshing data source...");
     get_rapidBoard().then(data => {
-      //   console.log(data);
-
-      const keyedArray = arrayItem =>
-        arrayItem.reduce(
-          (accumulator, currentValue) => {
-            const { id } = currentValue;
-            const keyValue = {};
-            keyValue[id] = currentValue;
-
-            const { _sequence } = accumulator;
-            _sequence.push(id);
-
-            return { ...accumulator, ...keyValue, _sequence };
-          },
-          { _sequence: [] }
-        );
-
-      const process = keyName => {
-        const array = _.get(data, keyName, []);
-        return keyedArray(array);
-      };
-
-      console.log("Processing data source...");
-      issues.set(process("issues"));
-      sprints.set(process("sprints"));
-      epics.set(process("epicData.epics"));
-      console.log("Done!");
+	  jiraData.set(data);
+      console.log("Done!", {$jiraData});
       isMovingIssues.set(false);
-      dataLastUpdateTime.set(new Date().getTime());
-
-      ready.set(true);
-      console.log({ $issues, $sprints, $epics });
+	  ready.set(true);
+	  
+      console.log({ $issues, $sprints, $isMovingIssues });
     });
   };
   let timeout_refreshDataSource;
