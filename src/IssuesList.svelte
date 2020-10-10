@@ -2,7 +2,8 @@
   import _ from "lodash";
   import {
     issues,
-    sprints,
+	sprints,
+	overallIssuesSequence,
     activeSearchTerm,
     activeSprintFilter,
     activeIssueId,
@@ -81,10 +82,15 @@
     const { sprintId, moveMode, referenceIssueId } = event.detail;
     console.log({ sprintId, moveMode, referenceIssueId });
 
+    const sequenced_selectIssueIds = [...$selectedIssuesIds].sort((a, b) => {
+      return $overallIssuesSequence.indexOf(a) - $overallIssuesSequence.indexOf(b);
+	});
+	console.log({sequenced_selectIssueIds})
+
     isMovingIssues.set(true);
     const reorder_result = await set_issuesRank(
       sprintId,
-      $selectedIssuesIds,
+      sequenced_selectIssueIds,
       referenceIssueId,
       moveMode
     );
