@@ -1,6 +1,7 @@
 <script>
   import { getContext } from 'svelte';
   import {
+    isSearching,
     isMovingIssues,
     dataLastUpdateTime,
     selectedIssuesIds
@@ -19,8 +20,7 @@
     items,
     onItemClick,
     onNumberSubmit,
-    userCanToggleVisibility,
-    isSearching;
+    userCanToggleVisibility;
   let userToggleVisible = false;
 
   const onToggleClick = () => {
@@ -120,7 +120,7 @@
     </div>
     {#if (userCanToggleVisibility && userToggleVisible) || !userCanToggleVisibility}
       <ol out:slide|local>
-        {#if items.length > 0 && !isSearching}
+        {#if items.length > 0 && !$isSearching}
           <li>
             <Card
               type="basic"
@@ -160,7 +160,7 @@
               <Divider
                 onClick={() => triggerMoveIssues('after', item.id)}
                 dropTarget={true}
-                disabled={isSearching}>
+                disabled={$isSearching}>
                 <div slot="dragging" let:dropped>
                   <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
                 </div>
@@ -169,7 +169,7 @@
             </li>
           {/if}
         {/each}
-        {#if !isSearching}
+        {#if !$isSearching}
           <li>
             <Card type="basic" name="Add new item..." onClick={addItem} />
           </li>

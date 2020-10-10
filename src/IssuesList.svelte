@@ -4,7 +4,8 @@
     issues,
     sprints,
     overallIssuesSequence,
-    activeSearchTerm,
+    isSearching,
+    searchMatches,
     activeSprintFilter,
     activeIssueId,
     selectedIssuesIds,
@@ -42,31 +43,40 @@
         let selection = window.getSelection();
         selection.removeAllRanges();
 
+        // determine with "visual ordering" to use
+        const visualSequence = $isSearching
+          ? $searchMatches
+          : $overallIssuesSequence;
+
         // proceed with selection logic
         const lastClickedItemId = $selectedIssuesIds.slice(-1)[0];
 
         let new_selectedIssuesIds = [];
-        if (lastClickedItemId) {
-          const lastClickedItemId_index = $overallIssuesSequence.indexOf(
-            lastClickedItemId
-          );
-          const currentClickItemId_index = $overallIssuesSequence.indexOf(
-            itemId
-          );
 
-          // the following logic is to ensure "lastClickedItem" remains the "lastClickedItem", since "shift-click" does not count as a selection click (ctrl-click)
-          if (currentClickItemId_index < lastClickedItemId_index) {
-            new_selectedIssuesIds = $overallIssuesSequence.slice(
-              currentClickItemId_index,
-              lastClickedItemId_index
-            );
+        if (lastClickedItemId) {
+          // if user is searching, and the last clicked item is not in view
+          if ($isSearching && !visualSequence.includes(lastClickedItemId)) {
+            new_selectedIssuesIds = [...$selectedIssuesIds, itemId];
           } else {
-            new_selectedIssuesIds = $overallIssuesSequence.slice(
-              lastClickedItemId_index + 1,
-              currentClickItemId_index + 1
+            const lastClickedItemId_index = visualSequence.indexOf(
+              lastClickedItemId
             );
+            const currentClickItemId_index = visualSequence.indexOf(itemId);
+
+            // the following logic is to ensure "lastClickedItem" remains the "lastClickedItem", since "shift-click" does not count as a selection click (ctrl-click)
+            if (currentClickItemId_index < lastClickedItemId_index) {
+              new_selectedIssuesIds = visualSequence.slice(
+                currentClickItemId_index,
+                lastClickedItemId_index
+              );
+            } else {
+              new_selectedIssuesIds = visualSequence.slice(
+                lastClickedItemId_index + 1,
+                currentClickItemId_index + 1
+              );
+            }
+            new_selectedIssuesIds.push(lastClickedItemId);
           }
-          new_selectedIssuesIds.push(lastClickedItemId);
         } else {
           // in case no items was selected previously, even with shift engaged
           new_selectedIssuesIds.push(itemId);
@@ -164,38 +174,44 @@
       const sprintData = $sprints[sprintId];
       const { issuesIds } = sprintData;
 
-      const issues = issuesIds.map(issueId => {
-        const issue = _$issues[issueId];
-        const { summary, statusUrl, key } = issue;
-        const estimate = _.get(
-          issue,
-          "estimateStatistic.statFieldValue.text",
-          ""
-        );
+      const issues = issuesIds
+        .filter(issueId => {
+          return (
+            ($isSearching && $searchMatches.includes(issueId)) || !$isSearching
+          );
+        })
+        .map(issueId => {
+          const issue = _$issues[issueId];
+          const { summary, statusUrl, key } = issue;
+          const estimate = _.get(
+            issue,
+            "estimateStatistic.statFieldValue.text",
+            ""
+          );
 
-        const searchString = `${key} ${summary} ${estimate}`
-          .toLocaleLowerCase()
-          .trim();
-        const _hidden =
-          $activeSearchTerm === ""
-            ? false
-            : !searchString.includes($activeSearchTerm);
+          const searchString = `${key} ${summary} ${estimate}`
+            .toLocaleLowerCase()
+            .trim();
+          // const _hidden =
+          //   $isSearching
+          //     ? false
+          //     : !searchString.includes($activeSearchTerm);
 
-        let _name = summary;
-        // if (estimate !== "") _name += ` [${estimate}]`;
+          let _name = summary;
+          // if (estimate !== "") _name += ` [${estimate}]`;
 
-        return {
-          ...issue,
-          _name,
-          _prefix: key,
-          _url: `${statusUrl}browse/${key}`,
-          _tooltip: `${key}: ${summary}`,
-          _hidden,
-          _active: $activeIssueId === issueId,
-          _selected: $selectedIssuesIds.includes(issueId),
-          _numberValue: estimate
-        };
-      });
+          return {
+            ...issue,
+            _name,
+            _prefix: key,
+            _url: `${statusUrl}browse/${key}`,
+            _tooltip: `${key}: ${summary}`,
+            // _hidden,
+            _active: $activeIssueId === issueId,
+            _selected: $selectedIssuesIds.includes(issueId),
+            _numberValue: estimate
+          };
+        });
 
       return { ...sprintData, issues };
     });
@@ -216,8 +232,7 @@
       {onNumberSubmit}
       on:createNewIssue={onCreateNewIssue}
       on:moveIssues={onMoveIssues}
-      isSearching={$activeSearchTerm !== ''}
-      userCanToggleVisibility={$activeSearchTerm === '' && $activeSprintFilter === ''} />
+      userCanToggleVisibility={!$isSearching && $activeSprintFilter === ''} />
     <!-- {isDragging} /> -->
   {/each}
 </div>
