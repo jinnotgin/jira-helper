@@ -49,7 +49,7 @@
 </style>
 
 {#if disabled}
-  <div class="divider">
+  <div class="divider" class:disabled>
     <hr />
   </div>
 {:else if dropTarget}
