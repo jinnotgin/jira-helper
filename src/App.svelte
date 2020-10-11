@@ -6,9 +6,12 @@
 	issues,
 	sprints,
     isMovingIssues,
-    dataLastUpdateTime,
+	dataLastUpdateTime,
     activeSprintFilter,
-    ready
+	ready,
+	overallIssuesSequence,
+	activeIssueId,
+	selectedIssuesIds,
   } from "./stores.js";
 
   import IssuesList from "./IssuesList.svelte";
@@ -16,6 +19,7 @@
   import IssueBrowser from "./IssueBrowser.svelte";
   export let name;
 
+  let firstLoad = true;
   import { get_rapidBoard } from "./api.js";
 
   const _refreshDataSource = () => {
@@ -24,6 +28,17 @@
 	  jiraData.set(data);
       console.log("Done!", {$jiraData});
       isMovingIssues.set(false);
+
+	  if (firstLoad) {
+		  // automatically select the first issue
+		  const firstIssueId = $overallIssuesSequence.length > 0 ? $overallIssuesSequence[0] : false;
+		  if (firstIssueId) {
+			  activeIssueId.set(firstIssueId);
+			  selectedIssuesIds.set([firstIssueId]);
+			  firstLoad = false;
+		  }
+	  }
+	  
 	  ready.set(true);
 	  
       console.log({ $issues, $sprints, $isMovingIssues });
