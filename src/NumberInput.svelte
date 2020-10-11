@@ -2,12 +2,22 @@
 	import { createEventDispatcher } from 'svelte';
   const dispatch = createEventDispatcher();
   
+  const numberClone = (input) => JSON.parse(JSON.stringify(input));
+
   export let value;
+
+  // track local changes to "value" differently from "prop value"
+  const local = {};
+  $: local.value = numberClone(value);   
+
+  let disabled = false;
+  $: value, disabled = false;   // when prop's value changes, we remove the "disabled"
 
   const onKeyupHandler = (event) => {
     if (event.code == "Enter") {
       event.preventDefault();
 
+      disabled = true;
       dispatch('valueChanged', {
         value: event.target.value,
       });
@@ -19,7 +29,8 @@
   class="numberInput custom-numberInput"
   type="number"
   step="any"
-  value={value}
+  {disabled}
+  bind:value={local.value}
   on:keyup|preventDefault={onKeyupHandler}
 />
 

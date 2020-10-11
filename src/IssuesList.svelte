@@ -16,7 +16,7 @@
   import SprintList from "./SprintList.svelte";
   import Card from "./Card.svelte";
 
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, tick } from "svelte";
   const dispatch = createEventDispatcher();
 
   import { set_IssueEstimate, set_newIssue, set_issuesRank } from "./api.js";
@@ -93,6 +93,8 @@
     console.log({ itemId, estimateValue });
     const result = await set_IssueEstimate(itemId, estimateValue);
     console.log(result);
+    await tick();
+    dispatch("refreshDataSource", {});
   };
 
   const onCreateNewIssue = async event => {
