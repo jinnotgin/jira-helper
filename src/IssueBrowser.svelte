@@ -22,4 +22,4 @@
   }
 </style>
 
-<iframe class="issue-browser" src={activeIssueUrl} title="Issue Browser" />
+<iframe class="issue-browser" name="issue-browser" src={activeIssueUrl} title="Issue Browser" />
