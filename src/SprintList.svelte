@@ -138,35 +138,35 @@
           </Divider>
         {/if}
         {#each items as item (item.id)}
-            <li animate:flip="{{duration: 200}}"> 
-              <Card 
-                id={item.id}
-                name={item._name}
-                url={item._url}
-                urlName={item._prefix}
-                tooltipText={item._tooltip}
-                active={item._active}
-                selected={item._selected}
-                onClick={event => !$isMovingIssues && onItemClick(event, item.id)}
-                draggable={!$isMovingIssues}
-                disabled={$isMovingIssues && $selectedIssuesIds.includes(item.id)}>
-                <NumberInput
-                  value={item._numberValue}
-                  on:valueChanged={e => {
-                    onNumberSubmit(item.id, e.detail.value);
-                  }} />
-              </Card>
-                {#key $dataLastUpdateTime}
-              <Divider
-                onClick={() => triggerMoveIssues('after', item.id)}
-                dropTarget={true}
-                disabled={$isSearching}>
-                <div slot="dragging" let:dropped>
-                  <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
-                </div>
-              </Divider>
-                {/key}
-            </li>
+          <li animate:flip="{{duration: 200}}"> 
+            <Card 
+              id={item.id}
+              name={item._name}
+              url={item._url}
+              urlName={item._prefix}
+              tooltipText={item._tooltip}
+              active={item._active}
+              selected={item._selected}
+              onClick={event => !$isMovingIssues && onItemClick(event, item.id)}
+              draggable={!$isMovingIssues}
+              disabled={$isMovingIssues && $selectedIssuesIds.includes(item.id)}>
+              <NumberInput
+                value={item._numberValue}
+                on:valueChanged={e => {
+                  onNumberSubmit(item.id, e.detail.value);
+                }} />
+            </Card>
+              {#key $dataLastUpdateTime}
+            <Divider
+              onClick={() => triggerMoveIssues('after', item.id)}
+              dropTarget={true}
+              disabled={$isSearching}>
+              <div slot="dragging" let:dropped>
+                <Card type="blank" name={dropped ? `Moving ${$selectedIssuesIds.length} items...` : ""} />
+              </div>
+            </Divider>
+              {/key}
+          </li>
         {/each}
         {#if !$isSearching}
           <li>
