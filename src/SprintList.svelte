@@ -14,6 +14,7 @@
   const dispatch = createEventDispatcher();
 
   import { slide, fade } from "svelte/transition";
+  import { flip } from "svelte/animate";
 
   export let sprintId,
     header,
@@ -119,7 +120,7 @@
       <h2>{header}</h2>
     </div>
     {#if (userCanToggleVisibility && userToggleVisible) || !userCanToggleVisibility}
-      <ol out:slide|local>
+      <ol>
         {#if items.length > 0 && !$isSearching}
           <li>
             <Card
@@ -137,9 +138,8 @@
           </Divider>
         {/if}
         {#each items as item (item.id)}
-          {#if !item._hidden}
-            <li>
-              <Card
+            <li animate:flip="{{duration: 200}}"> 
+              <Card 
                 id={item.id}
                 name={item._name}
                 url={item._url}
@@ -167,7 +167,6 @@
               </Divider>
                 {/key}
             </li>
-          {/if}
         {/each}
         {#if !$isSearching}
           <li>

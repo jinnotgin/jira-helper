@@ -192,10 +192,6 @@
           const searchString = `${key} ${summary} ${estimate}`
             .toLocaleLowerCase()
             .trim();
-          // const _hidden =
-          //   $isSearching
-          //     ? false
-          //     : !searchString.includes($activeSearchTerm);
 
           let _name = summary;
           // if (estimate !== "") _name += ` [${estimate}]`;
