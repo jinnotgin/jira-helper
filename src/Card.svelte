@@ -89,7 +89,7 @@
           {urlName}
         </a>
       </div>
-      <slot />
+      <slot name="top-right" />
     </div>
     <div class="content">
       <span class="name">{name}</span>

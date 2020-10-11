@@ -150,11 +150,13 @@
               onClick={event => !$isMovingIssues && onItemClick(event, item.id)}
               draggable={!$isMovingIssues}
               disabled={$isMovingIssues && $selectedIssuesIds.includes(item.id)}>
-              <NumberInput
-                value={item._numberValue}
-                on:valueChanged={e => {
-                  onNumberSubmit(item.id, e.detail.value);
-                }} />
+              <div slot="top-right">
+                <NumberInput
+                  value={item._numberValue}
+                  on:valueChanged={e => {
+                    onNumberSubmit(item.id, e.detail.value);
+                  }} />
+              </div>
             </Card>
               {#key $dataLastUpdateTime}
             <Divider
