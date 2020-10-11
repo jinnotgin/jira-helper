@@ -43,18 +43,28 @@ export const get_rapidBoard = async () => {
 };
 
 export const set_IssueEstimate = async (issuedId, estimateValue) => {
-  const atlassian_token_dom = document
-    .querySelector("iframe.issue-browser")
-    .contentDocument.querySelector("#atlassian-token");
-  const atlassian_token =
-    atlassian_token_dom !== null ? atlassian_token_dom.content : false;
+  let atlassian_token = false;
+  try {
+    const atlassian_token_dom = document
+      .querySelector("iframe.issue-browser")
+      .contentDocument.querySelector("#atlassian-token");
+    atlassian_token =
+      atlassian_token_dom !== null ? atlassian_token_dom.content : false;
 
-  if (!atlassian_token) {
+    if (!atlassian_token) {
+      console.error(error);
+      alert(
+        "Unable to obtain Atlasssian token. Please ensure you are browsing at least 1 issue."
+      );
+      return {};
+    }
+  }
+  catch(error) {
     console.error(error);
     alert(
       "Unable to obtain Atlasssian token. Please ensure you are browsing at least 1 issue."
     );
-    return {};
+    // return false;
   }
 
   let FETCH_URL = "";
