@@ -1,7 +1,7 @@
 import _ from "lodash";
 import * as JsSearch from "js-search";
 Object.keys(JsSearch.StopWordsMap).forEach(word => {
-  sSearch.StopWordsMap[word] = false;
+  JsSearch.StopWordsMap[word] = false;
 });
 import { writable, derived } from "svelte/store";
 
