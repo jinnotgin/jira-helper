@@ -4,13 +4,13 @@
     issues,
     activeIssueId,
   } from "./stores.js";
+  import { JIRA_BASE_URL } from './config.js';
 
   $: activeIssue = _.get($issues, `[${$activeIssueId}]`, {});
 
   $: key = _.get(activeIssue, 'key', false);
-  $: statusUrl = _.get(activeIssue, 'statusUrl', false);
   
-  $: activeIssueUrl = !!key ? `${statusUrl}browse/${key}` : '';
+  $: activeIssueUrl = !!key ? `${JIRA_BASE_URL}browse/${key}` : '';
 </script>
 
 <style>
