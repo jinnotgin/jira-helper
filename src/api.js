@@ -1,3 +1,5 @@
+// to refactor to use JIRA_BASE_URL from config.js
+
 let MODE = "DEBUG";
 if (location.hostname === "jira.sls.ufinity.com") MODE = "PRODUCTION";
 

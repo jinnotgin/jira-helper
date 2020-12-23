@@ -11,6 +11,7 @@
     selectedIssuesIds,
     isMovingIssues
   } from "./stores.js";
+  import { JIRA_BASE_URL } from './config.js';
 
   import DragDropAware from "./DragDropAware.svelte";
   import SprintList from "./SprintList.svelte";
@@ -184,7 +185,7 @@
         })
         .map(issueId => {
           const issue = _$issues[issueId];
-          const { summary, statusUrl, key } = issue;
+          const { summary, key } = issue;
           const estimate = _.get(
             issue,
             "estimateStatistic.statFieldValue.text",
@@ -202,7 +203,7 @@
             ...issue,
             _name,
             _prefix: key,
-            _url: `${statusUrl}browse/${key}`,
+            _url: `${JIRA_BASE_URL}browse/${key}`,
             _tooltip: `${key}: ${summary}`,
             // _hidden,
             _active: $activeIssueId === issueId,
